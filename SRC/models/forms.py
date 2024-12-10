@@ -1,0 +1,26 @@
+from wtforms import Form
+from wtforms import IntegerField,validators,StringField
+
+class Questions(Form):
+    COMPANY_NAME=StringField("COMPANY_NAME")
+    QUESTION_A=IntegerField("QUESTION_A",[validators.NumberRange(min=1,max=10)])
+    QUESTION_B=IntegerField("QUESTION_B",[validators.NumberRange(min=1,max=10)])
+    QUESTION_C=IntegerField("QUESTION_C",[validators.NumberRange(min=1,max=10)])
+    QUESTION_D=IntegerField("QUESTION_D",[validators.NumberRange(min=1,max=10)])
+    QUESTION_E=IntegerField("QUESTION_E",[validators.NumberRange(min=1,max=10)])
+    QUESTION_F=IntegerField("QUESTION_F",[validators.NumberRange(min=1,max=10)])
+    QUESTION_G=IntegerField("QUESTION_G",[validators.NumberRange(min=1,max=10)])
+    QUESTION_H=IntegerField("QUESTION_H",[validators.NumberRange(min=1,max=10)])
+    QUESTION_I=IntegerField("QUESTION_I",[validators.NumberRange(min=1,max=10)])
+    QUESTION_J=IntegerField("QUESTION_J",[validators.NumberRange(min=1,max=10)])
+    QUESTION_K=IntegerField("QUESTION_K",[validators.NumberRange(min=1,max=10)])
+    QUESTION_L=IntegerField("QUESTION_L",[validators.NumberRange(min=1,max=10)])
+    QUESTION_M=IntegerField("QUESTION_M",[validators.NumberRange(min=1,max=10)])
+    QUESTION_O=IntegerField("QUESTION_O",[validators.NumberRange(min=0,max=1)])
+    QUESTION_P=IntegerField("QUESTION_P",[validators.NumberRange(min=0,max=1)])
+    QUESTION_Q=IntegerField("QUESTION_P",[validators.NumberRange(min=0,max=1)])
+    QUESTION_R=IntegerField("QUESTION_P",[validators.NumberRange(min=0,max=1)])
+    QUESTION_S=IntegerField("QUESTION_P",[validators.NumberRange(min=0,max=1)])
+    QUESTION_T=IntegerField("QUESTION_P",[validators.NumberRange(min=0,max=1)])
+    QUESTION_U=IntegerField("QUESTION_P",[validators.NumberRange(min=0,max=1)])
+    QUESTION_V=IntegerField("QUESTION_P",[validators.NumberRange(min=0,max=100)])
