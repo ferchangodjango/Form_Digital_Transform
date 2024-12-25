@@ -1,0 +1,24 @@
+{% extends './layout.html' %}
+
+{% block title %}
+Lay Out Final
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block bokeh_script %}
+
+{{ data.js_resources|indent(4)|safe }}
+{{ data.css_resources|indent(4)|safe}}
+{{ data.script|indent(4)|safe }}
+
+{% endblock %}
+
+{% block body %}
+<h1>ConsultaExitosa</h1>
+<div class="row"> 
+    {{data.div|indent(4)|safe}}
+</div>
+
+{% endblock %}

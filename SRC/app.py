@@ -3,14 +3,21 @@ from config import ConfigObject
 from flask_mysqldb import MySQL
 from models.forms import Questions
 from DataAnalisys.Query import Query
+from DataAnalisys.DigitalTransformReport import ResumeFormDigitalTransform
+from DataAnalisys.dinamicGraphs import RadarChart
 from DB.ManageResources import ManageResources
 
 app=Flask(__name__)
 db=MySQL(app)
 
+@app.route('/home')
+def home():
+    return render_template('home.html')
+
 @app.route('/')
 def index():
     return redirect(url_for('insertsell'))
+
 
 @app.route('/insertsell',methods=['GET','POST'])
 def insertsell():
@@ -54,6 +61,18 @@ def insertsell():
 
         }
         return render_template('CRUD/insertsell.html',data=data,form=formulario)
+
+@app.route('/GetResources',methods=['GET'])
+def GetResources():
+    query=Query.consultingData()
+    DataFramePilot=ManageResources.queryExecute(db,query)
+    DataResumePilot=ResumeFormDigitalTransform(DataFramePilot,'VEQ3')
+    MainRadarGraph=RadarChart(DataResumePilot)
+    MainRadarResources=ManageResources.extractResource(MainRadarGraph)
+
+    return (render_template('CRUD/GetData.html', data=MainRadarResources))
+
+
 
 if __name__=='__main__':
     app.config.from_object(ConfigObject)

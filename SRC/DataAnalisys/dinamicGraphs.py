@@ -1,8 +1,9 @@
 from bokeh.layouts import column
-from bokeh.models import LogColorMapper,ColumnDataSource,CustomJS,Range1d,LinearAxis,HoverTool,NumeralTickFormatter,Slider,RangeTool
+from bokeh.models import LogColorMapper,ColumnDataSource,CustomJS,Range1d,LinearAxis,HoverTool,NumeralTickFormatter,Slider,RangeTool,LabelSet
 from bokeh.models.widgets import Select
 from bokeh.plotting import figure
 from bokeh.palettes import Turbo256
+import numpy as np
 
 def DinamicSeriesTime(DataFrame,column_values,width=500,height=500):
     """ This function return a dinamic graph, for show in your browser"""
@@ -281,3 +282,57 @@ def MapDinamic(DataFrame,column_values,palette,width=800,height=500,ranges=None)
         figure1.y_range=Range1d(ranges["liy1"],ranges["lsy2"])
         return figure1
 
+def RadarChart(data):
+
+    """This function create a radar chart, this kind of chart work for
+    show a measure in several categorys"""
+    NAME_VARS=list(data['CATEGORY'].unique())
+    num_vars=len(NAME_VARS)
+    centre = 0.5
+    
+    theta = np.linspace(0, 2*np.pi, num_vars, endpoint=False)
+    # rotate theta such that the first axis is at the top
+    theta += np.pi/2
+    
+    def unit_poly_verts(theta, centre ):
+        """Return vertices of polygon for subplot axes.
+        This polygon is circumscribed by a unit circle centered at (0.5, 0.5)
+        """
+        x0, y0, r = [centre ] * 3
+        verts = [(r*np.cos(t) + x0, r*np.sin(t) + y0) for t in theta]
+        return verts
+    
+    def radar_patch(r, theta, centre ):
+        """ Returns the x and y coordinates corresponding to the magnitudes of 
+        each variable displayed in the radar plot
+        """
+        # offset from centre of circle
+        offset = 0.01
+        yt = (r*centre + offset) * np.sin(theta) + centre 
+        xt = (r*centre + offset) * np.cos(theta) + centre 
+        return xt, yt
+        
+    verts = unit_poly_verts(theta, centre)
+    x = [v[0] for v in verts] 
+    y = [v[1] for v in verts] 
+    
+    p = figure(title="Digital habilities - Radar plot")
+    text = [NAME_VARS[0],NAME_VARS[1],NAME_VARS[2],NAME_VARS[3],'']
+    source = ColumnDataSource({'x':x + [centre ],'y':y + [1],'text':text})
+    
+    p.line(x="x", y="y", source=source)
+    
+    labels = LabelSet(x="x",y="y",text="text",source=source)
+    
+    p.add_layout(labels)
+    
+    # example factor:
+    f1 = np.array(list(data["REAL %"]))
+    f2 = np.array([0.00, 0.00, 0.00, 0.00])
+    #xt = np.array(x)
+    flist = [f1,f2]
+    colors = ['blue','green']
+    for i in range(len(flist)):
+        xt, yt = radar_patch(flist[i], theta, centre)
+        p.patch(x=xt, y=yt, fill_alpha=0.15, fill_color=colors[i])
+    return p

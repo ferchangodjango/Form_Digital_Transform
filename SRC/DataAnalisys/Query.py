@@ -27,18 +27,5 @@ class Query():
                                             data['QUESTION_Q'],data['QUESTION_R'],data['QUESTION_S'],
                                             data['QUESTION_T'],data['QUESTION_U'],data['QUESTION_V'])
         return query
-    
-    @classmethod
-    def queryinsertPilot(self,data):
-        query="""INSERT INTO QUESTIONNAIRE_FIX (COMPANY_NAME,QUESTION_A,QUESTION_B)
-            VALUES ("{0}",{1},{2})""".format(data['COMPANY_NAME'],data['QUESTION_A'],data['QUESTION_B'])
-        return query
-    
-    @classmethod
-    def queryinsertUnique(self):
-        query="""INSERT INTO questionnaire_fix (COMPANY_NAME,QUESTION_A,QUESTION_B)
-            VALUES ("vacas",9,8)"""
-        return query
-
 
         
