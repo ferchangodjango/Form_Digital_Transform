@@ -16,11 +16,11 @@ def home():
 
 @app.route('/')
 def index():
-    return redirect(url_for('insertsell'))
+    return redirect(url_for('digital_maturity_form'))
 
 
-@app.route('/insertsell',methods=['GET','POST'])
-def insertsell():
+@app.route('/digital_maturity_form',methods=['GET','POST'])
+def digital_maturity_form():
     """This Function get the data throuht a form,
     In efect, is only a view about a simple form"""
     formulario=Questions()
@@ -52,15 +52,9 @@ def insertsell():
         query=Query.queryinsert(data)
         insert_data=ManageResources.queryExecute(db,query,insert=True)
 
-        return render_template('CRUD/insertsell.html',data=data,form=formulario)
+        return render_template('CRUD/digital_maturity_form.html',form=formulario)
     else:
-        data={
-            "IDPRODUCT":1,
-            "IDSELLERS":1,
-            "QUANTITY":1
-
-        }
-        return render_template('CRUD/insertsell.html',data=data,form=formulario)
+        return render_template('CRUD/digital_maturity_form.html',form=formulario)
 
 @app.route('/GetResources',methods=['GET'])
 def GetResources():

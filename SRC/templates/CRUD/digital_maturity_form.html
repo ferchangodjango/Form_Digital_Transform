@@ -1,0 +1,98 @@
+{% extends './layout.html' %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{url_for('static',filename='css/general_style.css')}}">
+{% endblock %}
+
+{% block bokeh_script %}
+
+{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center my-5">
+  <div class="col-lg-6 ">
+      <main class="form-group">
+        {% from './macro.html' import render_field %}
+        <form action="digital_maturity_form" method="POST">
+          <img class="mb-4" src="{{url_for('static',filename='img/sell.svg')}}" alt="" width="300" height="100">
+
+          <h1 class="h3 mb-3 fw-normal">QUESTIONARIO DE MADUREZ DIGITAL</h1>
+          
+          <label for="email" class="form-label">Nombre de la compania</label>
+          {{render_field(form.COMPANY_NAME,class="form-control",color="#55595c")}}
+          
+          <label for="numerical" class="form-label">¿Tiene definido el objetivo de la empresa?</label>
+          {{render_field(form.QUESTION_A,class="form-control")}}
+
+          <label for="numerical" class="form-label">¿Tiene claro sus objetivos semanales?</label>
+          {{render_field(form.QUESTION_B,class="form-control")}}
+
+          <label for="numerical" class="form-label">¿Programa seciones para definir los objetivos?</label>
+          {{render_field(form.QUESTION_C,class="form-control")}}
+          
+          <label for="numerical" class="form-label">¿Maneja un cronograma con sus hitos importantes?</label>
+          {{render_field(form.QUESTION_D,class="form-control",placeholder="Responda del 1 al 10")}}
+
+          <label for="numerical" class="form-label">¿Se apaega a la planeación de sus objetivos en tiempo y en forma?</label>
+          {{render_field(form.QUESTION_E,class="form-control")}}
+
+          <label for="numerical" class="form-label">¿Adecua sus estrategias para cumplir con las espectativas de sus clientes?</label>
+          {{render_field(form.QUESTION_F,class="form-control")}}
+
+          <label for="numerical" class="form-label">¿Cambia sus planes sin avisar a su equipo?</label>
+          {{render_field(form.QUESTION_G,class="form-control")}}
+
+          <label for="numerical" class="form-label">¿Actua de manera rapida para resolver algun problema?</label>
+          {{render_field(form.QUESTION_H,class="form-control")}}
+
+          <label for="numerical" class="form-label">¿Explora nuevos caminos para resolver un problema?</label>
+          {{render_field(form.QUESTION_I,class="form-control")}}
+
+          <label for="numerical" class="form-label">¿Su equipo propone soluciones para resolver un problema?</label>
+          {{render_field(form.QUESTION_J,class="form-control")}}
+
+          <label for="numerical" class="form-label">¿Programa reuniones de trabajo con su equipo para generar propuestas?</label>
+          {{render_field(form.QUESTION_K,class="form-control")}}
+
+          <label for="numerical" class="form-label">¿Actua de manera rapida para resolver un problema?</label>
+          {{render_field(form.QUESTION_L,class="form-control")}}
+
+          <label for="numerical" class="form-label">¿Solicita ayuda externa, como consultorias, para resolver algun problema?</label>
+          {{render_field(form.QUESTION_M,class="form-control")}}
+
+          <label for="numerical" class="form-label">¿Tiene definido correctamente los roles dentro de una organización?</label>
+          {{render_field(form.QUESTION_O,class="form-control")}}
+          
+          <label for="numerical" class="form-label">¿Implementa capacitaciones para sus trabajadores?</label>
+          {{render_field(form.QUESTION_P,class="form-control")}}
+          
+          <label for="numerical" class="form-label">¿Implementa KPI para tener estatus de sus proyectos?</label>
+          {{render_field(form.QUESTION_Q,class="form-control")}}
+
+          <label for="numerical" class="form-label">¿Invierte en automatizacion en sus procesos?</label>
+          {{render_field(form.QUESTION_R,class="form-control")}}
+
+          <label for="numerical" class="form-label">¿Tiene una pagina web?</label>
+          {{render_field(form.QUESTION_S,class="form-control")}}
+
+          <label for="numerical" class="form-label">¿Tiene una tienda online?</label>
+          {{render_field(form.QUESTION_T,class="form-control")}}
+
+          <label for="numerical" class="form-label">¿Realiza campañas de marketing digital?</label>
+          {{render_field(form.QUESTION_U,class="form-control")}}
+
+          <label for="numerical" class="form-label">¿Tiene servicios de atención al cliente?</label>
+          {{render_field(form.QUESTION_V,class="form-control")}}
+
+
+          <button class="btn btn-primary w-100 py-2" type="submit">Send</button>
+          
+          <p class="mt-5 mb-3 text-body-secondary">&copy; 2024–2025</p>
+        </form>
+      </main>
+  </div>
+
+</div>
+
+  
+{% endblock %}
