@@ -1,22 +1,37 @@
 from flask import Flask,render_template,request,redirect,url_for
 from config import ConfigObject
 from flask_mysqldb import MySQL
-from models.forms import Questions
+from models.forms import Questions, IMForm
 from DataAnalisys.Query import Query
 from DataAnalisys.DigitalTransformReport import ResumeFormDigitalTransform
-from DataAnalisys.dinamicGraphs import RadarChart
+from DataAnalisys.dinamicGraphs import RadarChart,ParetoDinamicColors
 from DB.ManageResources import ManageResources
+from bokeh.io import curdoc
+from bokeh.themes import Theme
+import os
 
+#Forms
+from wtforms import Form
+from wtforms import SelectField
+
+#Get the main path for reference the several file paths
+main_path=os.getcwd()
+
+#Start the aplication
 app=Flask(__name__)
+#Add the SQL Server for do the queries
 db=MySQL(app)
+
 
 @app.route('/home')
 def home():
+    """This function only redirect the main page"""
     return render_template('home.html')
 
 @app.route('/')
 def index():
-    return redirect(url_for('digital_maturity_form'))
+    """This function redirect always to the home"""
+    return redirect(url_for('home'))
 
 
 @app.route('/digital_maturity_form',methods=['GET','POST'])
@@ -56,15 +71,85 @@ def digital_maturity_form():
     else:
         return render_template('CRUD/digital_maturity_form.html',form=formulario)
 
-@app.route('/GetResources',methods=['GET'])
+@app.route('/GetResources',methods=['GET','POST'])
 def GetResources():
+    """This view redirect to the a little dashboard for get the information
+    about the diferent companies than fill the form"""
+    main_theme=curdoc()
+    TransparencyTheme=Theme(os.path.join(main_path,"SRC","static","ThemesCustom","TransparencyTotal.yml"))
+    main_theme.theme = TransparencyTheme
+    
     query=Query.consultingData()
-    DataFramePilot=ManageResources.queryExecute(db,query)
-    DataResumePilot=ResumeFormDigitalTransform(DataFramePilot,'VEQ3')
-    MainRadarGraph=RadarChart(DataResumePilot)
-    MainRadarResources=ManageResources.extractResource(MainRadarGraph)
+    RAW_QUERY=ManageResources.queryExecute(db,query)
+    Unique_Posibilitieslist=list(RAW_QUERY[1])
+    class SelectionForm(Form):
+        Default_value=["Selecciona una empresa"]
+        unique_names=Default_value+Unique_Posibilitieslist
+        protocol = SelectField("protocol",
+                            choices=[(i,i) for i in unique_names])
+    formulario=SelectionForm()
+    
+    if request.method=='POST':
+        data={
 
-    return (render_template('CRUD/GetData.html', data=MainRadarResources))
+            "Answer":request.form['protocol']
+        }
+        
+        
+        if data["Answer"] in Unique_Posibilitieslist:
+
+            RESUMEN_DIGITAL_TEST=ResumeFormDigitalTransform(RAW_QUERY,data["Answer"])
+            
+            #Get the data.
+            MainRadarGraph=RadarChart(RESUMEN_DIGITAL_TEST)
+            MainParetoGraph=ParetoDinamicColors(RESUMEN_DIGITAL_TEST,"CATEGORY","REAL %")
+            
+            #Get the resources
+            MainRadarResources=ManageResources.extractResourceTheme(MainRadarGraph,theme=main_theme.theme)
+            MainParetoResources=ManageResources.extractResourceTheme(MainParetoGraph,theme=main_theme.theme)
+
+            #Make a resources list
+            resources_list=[MainRadarResources,MainParetoResources]
+
+            #Join the resouces list
+            data=ManageResources.joinDictionary(resources_list)
+            return (render_template('CRUD/GetData.html', data=data, form=formulario))
+        else:
+            RESUMEN_DIGITAL_TEST=ResumeFormDigitalTransform(RAW_QUERY,'VEQ3')
+            
+            #Get the data
+            MainRadarGraph=RadarChart(RESUMEN_DIGITAL_TEST)
+            MainParetoGraph=ParetoDinamicColors(RESUMEN_DIGITAL_TEST,"CATEGORY","REAL %")
+            
+            #Get the resources
+            MainRadarResources=ManageResources.extractResourceTheme(MainRadarGraph,theme=main_theme.theme)
+            MainParetoResources=ManageResources.extractResourceTheme(MainParetoGraph,theme=main_theme.theme)
+
+            #Make a resources list
+            resources_list=[MainRadarResources,MainParetoResources]
+
+            #Join the resouces list
+            data=ManageResources.joinDictionary(resources_list)
+            return (render_template('CRUD/GetData.html', data=data, form=formulario))
+
+
+    else:
+        RESUMEN_DIGITAL_TEST=ResumeFormDigitalTransform(RAW_QUERY,'VEQ3')
+
+        #Get the graphs
+        MainRadarGraph=RadarChart(RESUMEN_DIGITAL_TEST)
+        MainParetoGraph=ParetoDinamicColors(RESUMEN_DIGITAL_TEST,"CATEGORY","REAL %")
+        
+        #Get the resources
+        MainRadarResources=ManageResources.extractResourceTheme(MainRadarGraph,theme=main_theme.theme)
+        MainParetoResources=ManageResources.extractResourceTheme(MainParetoGraph,theme=main_theme.theme)
+
+        #Make a resources list
+        resources_list=[MainRadarResources,MainParetoResources]
+
+        #Join the resouces list
+        data=ManageResources.joinDictionary(resources_list)
+        return (render_template('CRUD/GetData.html', data=data, form=formulario))
 
 
 

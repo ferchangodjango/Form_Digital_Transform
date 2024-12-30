@@ -31,7 +31,8 @@ class ManageResources():
     @classmethod
     def extractResource(self,graph):
         """ This function is for extract the script, div, JS_resources and CSS_resources
-        from bokeh graphs, for can render in the diferentes templates."""
+        from bokeh graphs, for can render in the diferentes templates, you only need to pass
+        the graph than you want extract the resources."""
         script,div=components(graph)
         js_resources=INLINE.render_js()
         css_resources=INLINE.render_css()
@@ -42,6 +43,26 @@ class ManageResources():
             "css_resources":css_resources
         }
         return data
+    
+    @classmethod
+    def extractResourceTheme(self,graph,theme=None):
+        """ This function is for extract the script, div, JS_resources and CSS_resources
+        from bokeh graphs, for can render in the diferentes templates, but in this case, this
+        function have the functionality to can add the theme"""
+        if theme==None:
+            script,div=components(graph)
+        else:
+            script,div=components(graph,theme=theme)
+        js_resources=INLINE.render_js()
+        css_resources=INLINE.render_css()
+        data={
+            "script":script,
+            "div":div,
+            "js_resources":js_resources,
+            "css_resources":css_resources
+        }
+        return data
+    
     
     @classmethod
     def joinDictionary(self,dictionary_list):
@@ -90,25 +111,3 @@ class ManageResources():
         dataConcat=dataConcat.reset_index(drop=True)
         return dataConcat
             
-
-def centralLimit(dataFrame,column,numberSample):
-    """ This function return a data frame where was aplied the
-    limit central theorem with the numberSample than you specific in the function"""
-    #Limit central logic
-    #Get a sample from the sizeData describe for the follow ecuation
-    proportion=0.5
-    statiscZ=1.96
-    error=0.05
-    sizeData=dataFrame[column].count()
-    sizeSample=(sizeData*statiscZ**2)*proportion*(1-proportion)/((sizeData-1)*error+(statiscZ**2)*proportion*(1-proportion))
-    sizeSample=int(round(sizeSample,0))
-    numberSample=int(numberSample)
-    list_dataframe_values=list(dataFrame[column])
-    #Get a mean of a sample from the original dataframe, and add this in a list
-    meanSample=[np.array(random.sample(list_dataframe_values,k=sizeSample)).mean() for i in range(numberSample)]
-    #Get a second data frame
-    data={
-    column:meanSample
-    }
-    sampleDataFrame=pd.DataFrame(data)
-    return sampleDataFrame

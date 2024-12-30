@@ -5,20 +5,66 @@ Lay Out Final
 {% endblock %}
 
 {% block css %}
+    <link rel="stylesheet" href="{{url_for('static',filename='css/general_style.css')}}">
 {% endblock %}
 
 {% block bokeh_script %}
 
-{{ data.js_resources|indent(4)|safe }}
-{{ data.css_resources|indent(4)|safe}}
-{{ data.script|indent(4)|safe }}
+<!--RadarChart-->
+
+{{ data.js_resources1|indent(4)|safe }}
+{{ data.css_resources1|indent(4)|safe}}
+{{ data.script1|indent(4)|safe }}
+
+<!--ParetoChart-->
+
+{{ data.js_resources2|indent(4)|safe }}
+{{ data.css_resources2|indent(4)|safe}}
+{{ data.script2|indent(4)|safe }}
+
 
 {% endblock %}
 
 {% block body %}
 <h1>ConsultaExitosa</h1>
-<div class="row"> 
-    {{data.div|indent(4)|safe}}
+{% from './macro.html' import render_field %}
+
+<div class="row justify-content-center my-5">
+    <div class="col-lg-6">
+        <form action="GetResources" method="post">
+            {{render_field(form.protocol,class="form-control")}}
+            <br>
+            <button class="btn btn-primary w-100 py-2" type="submit">Send</button>
+        </form>
+    </div>
+
+    
 </div>
+
+<div class="row justify-content-center my-5">
+    <div class="col-lg-6">
+    <!--Radar Chart-->
+    {{data.div1|indent(4)|safe}}
+
+    </div>
+
+    <div class="col-lg-6">
+
+    <!--Pareto Chart-->
+    {{data.div2|indent(4)|safe}}
+        
+    </div>
+
+</div>
+
+<div class="row justify-content-center my-5">
+    <div class="col-lg-3">
+      <a href="{{url_for('home')}}" class="btn btn-primary w-100 py-2">Home</a>
+    </div>
+  
+    <div class="col-lg-3">
+      <a href="{{url_for('digital_maturity_form')}}" class="btn btn-primary w-100 py-2">Form</a>
+    </div>
+  </div>
 
 {% endblock %}

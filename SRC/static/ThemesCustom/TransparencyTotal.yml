@@ -1,0 +1,12 @@
+attrs:
+    Plot:
+        background_fill_color: '#ffffff00'
+        border_fill_color: '#ffffff00'
+        outline_line_color: '#ffffff00'
+    Axis:
+        axis_line_color: !!null
+    Grid:
+        grid_line_dash: [6, 4]
+        grid_line_alpha: .3
+    Title:
+        text_color: "white"

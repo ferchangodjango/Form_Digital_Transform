@@ -169,9 +169,9 @@ def ParetoDinamic(DATA_FRAME,column_index,column_values,color="#9B59B6",width=50
 
 def ParetoDinamicColors(DATA_FRAME,column_index,column_values,palette=Turbo256,width=500,height=500,initial=5):
     #Set the color
-    palette=tuple(reversed(palette))
+    palette=tuple((palette))
     SizeDataFrame=DATA_FRAME[column_values].count()
-    TurboFitSize=[palette[i*4+30] for i in range(SizeDataFrame)]
+    TurboFitSize=[palette[i*40+30] for i in range(SizeDataFrame)]
     #Do pareto table.
     TOTAL=DATA_FRAME[column_values].sum()
     DATA_FRAME=DATA_FRAME.sort_values(by=column_values,ascending=False)
@@ -198,6 +198,7 @@ def ParetoDinamicColors(DATA_FRAME,column_index,column_values,palette=Turbo256,w
     figure1.ygrid.grid_line_alpha=0.7
     figure1.toolbar.autohide=True
     figure1.y_range.start = 0
+    figure1.y_range.end = 1
     figure1.x_range.range_padding = 0.1
     figure1.xaxis.major_label_orientation = 1
     figure1.xgrid.grid_line_color = None
@@ -282,7 +283,7 @@ def MapDinamic(DataFrame,column_values,palette,width=800,height=500,ranges=None)
         figure1.y_range=Range1d(ranges["liy1"],ranges["lsy2"])
         return figure1
 
-def RadarChart(data):
+def RadarChart(data,width=500,height=500):
 
     """This function create a radar chart, this kind of chart work for
     show a measure in several categorys"""
@@ -316,11 +317,15 @@ def RadarChart(data):
     x = [v[0] for v in verts] 
     y = [v[1] for v in verts] 
     
-    p = figure(title="Digital habilities - Radar plot")
+    p = figure(title="Digital habilities - Radar plot",width=width,height=height)
     text = [NAME_VARS[0],NAME_VARS[1],NAME_VARS[2],NAME_VARS[3],'']
     source = ColumnDataSource({'x':x + [centre ],'y':y + [1],'text':text})
     
     p.line(x="x", y="y", source=source)
+
+    #Configurations of p
+    p.toolbar.autohide=True
+    p.grid.grid_line_color=None
     
     labels = LabelSet(x="x",y="y",text="text",source=source)
     
